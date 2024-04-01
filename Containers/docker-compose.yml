@@ -1,0 +1,150 @@
+# How to run -> in terminal, in directory where 'docker-compose.yml' is placed run this command:
+# docker compose -p "dev-containers" up
+
+# For elastic search, adjust memory
+# `sudo sysctl -w vm.max_map_count=262144`
+# in file etc/sysctl.conf add line: `vm.max_map_count=262144`
+# to make it pemanent: sudo sysctl -p
+
+# also for elastic, make sure it has proper permissions to volume:
+# `sudo chown -R 1000:1000 /home/arnie/volumes/elasticsearch/data`
+# remove any lingering node lock
+# sudo rm -f /home/arnie/volumes/elasticsearch/data/node.lock
+
+# To delete all containers use:
+# docker container prune -f
+
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: unless-stopped
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: zaq1@WSX
+      POSTGRES_DB: postgres
+    volumes:
+      - /home/arnie/volumes/postgresql/data:/var/lib/postgresql/data
+    networks:
+      - default
+      - overlaynetwork
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    volumes:
+      - /home/arnie/volumes/mongo/data/db:/data/db
+    networks:
+      - default
+      - overlaynetwork
+
+  elastic:
+    image: elasticsearch:8.12.1
+    container_name: elastic
+    restart: unless-stopped
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g # Adjust memory limits as per available resources
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - /home/arnie/volumes/elasticsearch/data:/usr/share/elasticsearch/data
+    networks:
+      - default
+      - overlaynetwork
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    restart: unless-stopped
+    ports:
+      - '1435:1433'
+    user: root
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=zaq1@WSX
+    volumes:
+      - /home/arnie/volumes/mssql/data:/var/opt/mssql
+    networks:
+      - default
+      - overlaynetwork
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - /home/arnie/volumes/redis/data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - default
+      - overlaynetwork
+
+  seq:
+    image: datalust/seq:latest
+    container_name: seq
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - '5341:80'
+    volumes:
+      - /home/arnie/volumes/seq/data:/data
+    networks:
+      - default
+      - overlaynetwork
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    restart: unless-stopped
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    volumes:
+      - /home/arnie/volumes/rabbitmq/data:/var/lib/rabbitmq
+    networks:
+      - default
+      - overlaynetwork
+
+  jenkins:
+    image: jenkins/jenkins:latest
+    container_name: jenkins
+    restart: unless-stopped
+    user: root
+    ports:
+      - '8080:8080' # Jenkins web interface
+      - '50000:50000' # Jenkins agent connector port
+    volumes:
+      - /home/arnie/volumes/jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock # For Docker command access
+      - /usr/bin/docker:/usr/bin/docker # For Docker CLI access
+    environment:
+      JAVA_OPTS: '-Djenkins.install.runSetupWizard=false'
+    networks:
+      - default
+      - overlaynetwork
+
+networks:
+  default:
+    driver: bridge
+  overlaynetwork:
+    name: overlaynetwork
+    external: true
