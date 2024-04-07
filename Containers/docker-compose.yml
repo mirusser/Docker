@@ -14,6 +14,8 @@
 # To delete all containers use:
 # docker container prune -f
 
+# After starting containers make sure that ports are being forwarded
+
 version: '3.8'
 
 services:
