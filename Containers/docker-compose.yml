@@ -14,7 +14,7 @@
 # To delete all containers use:
 # docker container prune -f
 
-# After starting containers make sure that ports are being forwarded
+# After starting containers make sure that ports are being forwarded (and are listening)
 
 version: '3.8'
 
@@ -27,7 +27,7 @@ services:
       - '5432:5432'
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: zaq1@WSX
+      POSTGRES_PASSWORD: zaq1@WSX #super secret and strong password
       POSTGRES_DB: postgres
     volumes:
       - /home/arnie/volumes/postgresql/data:/var/lib/postgresql/data
@@ -79,7 +79,7 @@ services:
     user: root
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=zaq1@WSX
+      - MSSQL_SA_PASSWORD=zaq1@WSX #super secret and strong password
     volumes:
       - /home/arnie/volumes/mssql/data:/var/opt/mssql
     networks:
@@ -132,8 +132,8 @@ services:
     restart: unless-stopped
     user: root
     ports:
-      - '8080:8080' # Jenkins web interface
       - '50000:50000' # Jenkins agent connector port
+      - '8080:8080' # Jenkins web interface
     volumes:
       - /home/arnie/volumes/jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock # For Docker command access
