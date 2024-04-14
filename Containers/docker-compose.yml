@@ -1,4 +1,5 @@
 # How to run -> in terminal, in directory where 'docker-compose.yml' is placed run this command:
+# cd ~/Repos/Docker/Containers
 # docker compose -p "dev-containers" up
 
 # For elastic search, adjust memory
@@ -140,6 +141,26 @@ services:
       - /usr/bin/docker:/usr/bin/docker # For Docker CLI access
     environment:
       JAVA_OPTS: '-Djenkins.install.runSetupWizard=false'
+    networks:
+      - default
+      - overlaynetwork
+
+  healthchecks:
+    image: xabarilcoding/healthchecksui
+    container_name: healthchecks
+    restart: unless-stopped
+    depends_on:
+      - sqlserver
+    environment:
+      - storage_provider=SqlServer
+      - 'storage_connection=Server=sqlserver;User Id=sa;Password=zaq1@WSX;Initial Catalog=DockerUI'
+      - Logging:LogLevel:Default=Debug
+      - Logging:LogLevel:Microsoft=Warning
+      - Logging:LogLevel:HealthChecks=Debug
+    ports:
+      - 5000:80
+    volumes:
+      - /home/arnie/volumes/healthchecks/data/appsettings.json:/app/appsettings.json
     networks:
       - default
       - overlaynetwork
