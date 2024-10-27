@@ -2,15 +2,21 @@
 # cd ~/Repos/Docker/Containers
 # docker compose -p "dev-containers" up
 
+# You may have to setup the external network manually:
+# sudo docker network create -d bridge overlaynetwork
+
+# To list networks use:
+# sudo docker network ls
+
 # For elastic search, adjust memory
 # `sudo sysctl -w vm.max_map_count=262144`
 # in file etc/sysctl.conf add line: `vm.max_map_count=262144`
 # to make it permanent: sudo sysctl -p
 
 # also for elastic, make sure it has proper permissions to volume:
-# `sudo chown -R 1000:1000 /home/arnie/volumes/elasticsearch/data`
+# `sudo chown -R 1000:1000 /home/mirusser/docker/volumes/elasticsearch/data`
 # remove any lingering node lock
-# sudo rm -f /home/arnie/volumes/elasticsearch/data/node.lock
+# sudo rm -f /home/mirusser/docker/volumes/elasticsearch/data/node.lock
 
 # To delete all containers use:
 # docker container prune -f
@@ -31,7 +37,7 @@ services:
       POSTGRES_PASSWORD: zaq1@WSX #super secret and strong password
       POSTGRES_DB: postgres
     volumes:
-      - /home/arnie/volumes/postgresql/data:/var/lib/postgresql/data
+      - /home/mirusser/docker/volumes/postgresql/data:/var/lib/postgresql/data
     networks:
       - default
       - overlaynetwork
@@ -43,7 +49,7 @@ services:
     ports:
       - '27017:27017'
     volumes:
-      - /home/arnie/volumes/mongo/data/db:/data/db
+      - /home/mirusser/docker/volumes/mongo/data/db:/data/db
     networks:
       - default
       - overlaynetwork
@@ -66,7 +72,7 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - /home/arnie/volumes/elasticsearch/data:/usr/share/elasticsearch/data
+      - /home/mirusser/docker/volumes/elasticsearch/data:/usr/share/elasticsearch/data
     networks:
       - default
       - overlaynetwork
@@ -82,7 +88,7 @@ services:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=zaq1@WSX #super secret and strong password
     volumes:
-      - /home/arnie/volumes/mssql/data:/var/opt/mssql
+      - /home/mirusser/docker/volumes/mssql/data:/var/opt/mssql
     networks:
       - default
       - overlaynetwork
@@ -94,7 +100,7 @@ services:
     ports:
       - '6379:6379'
     volumes:
-      - /home/arnie/volumes/redis/data:/data
+      - /home/mirusser/docker/volumes/redis/data:/data
     command: redis-server --appendonly yes
     networks:
       - default
@@ -109,7 +115,7 @@ services:
     ports:
       - '5341:80'
     volumes:
-      - /home/arnie/volumes/seq/data:/data
+      - /home/mirusser/docker/volumes/seq/data:/data
     networks:
       - default
       - overlaynetwork
@@ -122,7 +128,7 @@ services:
       - '5672:5672'
       - '15672:15672'
     volumes:
-      - /home/arnie/volumes/rabbitmq/data:/var/lib/rabbitmq
+      - /home/mirusser/docker/volumes/rabbitmq/data:/var/lib/rabbitmq
     networks:
       - default
       - overlaynetwork
@@ -136,7 +142,7 @@ services:
       - '50000:50000' # Jenkins agent connector port
       - '8080:8080' # Jenkins web interface
     volumes:
-      - /home/arnie/volumes/jenkins_home:/var/jenkins_home
+      - /home/mirusser/docker/volumes/jenkins_home:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock # For Docker command access
       - /usr/bin/docker:/usr/bin/docker # For Docker CLI access
     environment:
@@ -160,7 +166,7 @@ services:
     ports:
       - 5000:80
     volumes:
-      - /home/arnie/volumes/healthchecks/data/appsettings.json:/app/appsettings.json
+      - /home/mirusser/docker/volumes/healthchecks/data/appsettings.json:/app/appsettings.json
     networks:
       - default
       - overlaynetwork
