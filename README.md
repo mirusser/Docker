@@ -1,8 +1,6 @@
 # Repo for my dev containers
 
 How to run -> in terminal, in directory where 'docker-compose.yml' is placed run this command:\
-`cd ~/Repos/Docker/Containers`
-
 `docker compose -p "dev-containers" up`
 
 You may have to setup the external network manually:\
