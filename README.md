@@ -1,5 +1,45 @@
 # Repo for my dev containers
 
+## General docker commands:
+
+Install docker:
+```bash
+sudo pacman -S docker
+```
+
+Enable Docker’s systemd service so that it starts on boot, and then start it right away:
+```bash
+sudo systemctl enable --now docker.service
+```
+
+Just start docker:
+```bash
+sudo systemctl start docker.socket docker.service
+```
+
+To stop docker:
+```bash
+sudo systemctl stop docker.socket docker.service
+```
+
+Verify it runs:
+```bash
+systemctl status docker.service
+```
+
+Add your user to the docker group:
+```bash
+sudo usermod -aG docker $USER
+```
+
+Disable on startup
+```bash
+sudo systemctl disable --now docker.socket
+sudo systemctl disable --now docker.service
+```
+
+## docker compose
+
 How to run -> in terminal, in directory where 'docker-compose.yml' is placed run this command:\
 `docker compose -p "dev-containers" up`
 
