@@ -2,7 +2,7 @@
 
 ## General docker commands:
 
-Install docker:
+Install docker (on arch linux):
 ```bash
 sudo pacman -S docker
 ```

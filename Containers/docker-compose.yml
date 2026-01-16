@@ -10,7 +10,7 @@ services:
       POSTGRES_PASSWORD: zaq1@WSX #super secret and strong password
       POSTGRES_DB: postgres
     volumes:
-      - /home/mirusser/docker/volumes/postgresql/data:/var/lib/postgresql/data
+      - /home/mirusser/docker/volumes/postgresql:/var/lib/postgresql
     networks:
       - default
       - overlaynetwork
@@ -85,6 +85,7 @@ services:
     restart: unless-stopped
     environment:
       - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_NOAUTHENTICATION=true 
     ports:
       - '5341:80'
     volumes:
@@ -94,7 +95,8 @@ services:
       - overlaynetwork
 
   rabbitmq:
-    image: rabbitmq:management
+    # image: rabbitmq:management # official version
+    image: heidiks/rabbitmq-delayed-message-exchange:latest # version that bundles the delayed-message-exchange plugin
     container_name: rabbitmq
     restart: unless-stopped
     ports:
