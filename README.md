@@ -40,31 +40,67 @@ sudo systemctl disable --now docker.service
 
 ## docker compose
 
-How to run -> in terminal, in directory where 'docker-compose.yml' is placed run this command:\
-`docker compose -p "dev-containers" up`
+How to run -> in terminal, in directory where file: 'docker-compose.yml' is placed run this command:\
+```bash
+docker compose -p "dev-containers" up
+```
 
 You may have to setup the external network manually:\
-`sudo docker network create -d bridge overlaynetwork`
+```bash
+sudo docker network create -d bridge overlaynetwork
+```
 
 To list networks use:\
-`sudo docker network ls`
+```bash
+sudo docker network ls
+```
 
 For elastic search, adjust memory\
-`sudo sysctl -w vm.max_map_count=262144`
+```bash
+sudo sysctl -w vm.max_map_count=262144
+```
 
 in file etc/sysctl.conf add line:\
-`vm.max_map_count=262144`
+```bash
+vm.max_map_count=262144
+```
 
 to make it permanent: \
-`sudo sysctl -p`
+```bash
+sudo sysctl -p
+```
 
 also for elastic, make sure it has proper permissions to volume:\
-`sudo chown -R 1000:1000 /home/mirusser/docker/volumes/elasticsearch/data` 
+```bash
+sudo chown -R 1000:1000 /home/mirusser/docker/volumes/elasticsearch/data
+```
 
 remove any lingering node lock\
-`sudo rm -f /home/mirusser/docker/volumes/elasticsearch/data/node.lock`
+```bash
+sudo rm -f /home/mirusser/docker/volumes/elasticsearch/data/node.lock`
+```
 
 To delete all containers use:\
-`docker container prune -f`
+```bash
+docker container prune -f`
+```
+
+Mongo, initialize the replica set (one-time)\
+```bash
+docker exec -it mongo mongosh --eval "rs.initiate({_id:'rs0', members:[{_id:0, host:'mongo:27017'}]})"
+```
+
+After enabling replica set, you can verify transactions are supported:\
+```bash
+docker exec -it mongo mongosh --eval "rs.status().ok"
+```
+Should output `1`
+
+When running apps locally you may need to associate localhost with 'mongo':\
+```bash
+sudo sh -c 'echo "127.0.0.1 mongo" >> /etc/hosts'
+```
+
+---
 
 After starting containers make sure that ports are being forwarded (and are listening)

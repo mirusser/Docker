@@ -23,6 +23,7 @@ services:
       - '27017:27017'
     volumes:
       - /home/mirusser/docker/volumes/mongo/data/db:/data/db
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"] # Run Mongo as a single-node replica set
     networks:
       - default
       - overlaynetwork
