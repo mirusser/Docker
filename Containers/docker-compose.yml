@@ -128,21 +128,27 @@ services:
       - overlaynetwork
 
   healthchecks:
-    image: xabarilcoding/healthchecksui
+    image: xabarilcoding/healthchecksui:latest
     container_name: healthchecks
     restart: unless-stopped
     depends_on:
       - sqlserver
     environment:
+      - ui_path=/ # defult was: healthchecks-ui
       - storage_provider=SqlServer
       - 'storage_connection=Server=sqlserver;User Id=sa;Password=zaq1@WSX;Initial Catalog=DockerUI'
       - Logging:LogLevel:Default=Debug
       - Logging:LogLevel:Microsoft=Warning
       - Logging:LogLevel:HealthChecks=Debug
+        # Register your Web API health endpoint:
+      - 'HealthChecksUI:HealthChecks:0:Name=CitiesServiceApi'
+      - 'HealthChecksUI:HealthChecks:0:Uri=http://host.docker.internal:5042/health'
     ports:
       - 5000:80
-    volumes:
-      - /home/mirusser/docker/volumes/healthchecks/data/appsettings.json:/app/appsettings.json
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    # volumes: # use appsettings.json if you want to have move configuration out of compose and have it in external file
+    #  - /home/mirusser/docker/volumes/healthchecks/data/appsettings.json:/app/appsettings.json # the file needs to be created manually before starting container
     networks:
       - default
       - overlaynetwork
