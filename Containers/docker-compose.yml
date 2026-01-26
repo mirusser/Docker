@@ -141,8 +141,28 @@ services:
       - Logging:LogLevel:Microsoft=Warning
       - Logging:LogLevel:HealthChecks=Debug
         # Register your Web API health endpoint:
-      - 'HealthChecksUI:HealthChecks:0:Name=CitiesServiceApi'
-      - 'HealthChecksUI:HealthChecks:0:Uri=http://host.docker.internal:5042/health'
+      - 'HealthChecksUI:HealthChecks:0:Name=OAuthServer-docker'
+      - 'HealthChecksUI:HealthChecks:0:Uri=http://oauthserver:80/health'
+      - 'HealthChecksUI:HealthChecks:1:Name=CitiesServiceApi-docker'
+      - 'HealthChecksUI:HealthChecks:1:Uri=http://citiesservice:80/health'
+      - 'HealthChecksUI:HealthChecks:2:Name=WeatherService-docker'
+      - 'HealthChecksUI:HealthChecks:2:Uri=http://weatherservice:80/health'
+      - 'HealthChecksUI:HealthChecks:3:Name=WeatherHistoryService-docker'
+      - 'HealthChecksUI:HealthChecks:3:Uri=http://weatherhistoryservice:80/health'
+      - 'HealthChecksUI:HealthChecks:4:Name=CitiesGrpcService-docker'
+      - 'HealthChecksUI:HealthChecks:4:Uri=http://citiesgrpcservice:80/health'
+      - 'HealthChecksUI:HealthChecks:5:Name=EmailService-docker'
+      - 'HealthChecksUI:HealthChecks:5:Uri=http://emailservice:80/health'
+      - 'HealthChecksUI:HealthChecks:6:Name=IconService-docker'
+      - 'HealthChecksUI:HealthChecks:6:Uri=http://iconservice:80/health'
+      - 'HealthChecksUI:HealthChecks:7:Name=SignalRServer-docker'
+      - 'HealthChecksUI:HealthChecks:7:Uri=http://signalrserver:80/health'
+      - 'HealthChecksUI:HealthChecks:8:Name=HangfireService-docker'
+      - 'HealthChecksUI:HealthChecks:8:Uri=http://hangfireservice:80/health'
+      - 'HealthChecksUI:HealthChecks:9:Name=WeatherSite-docker'
+      - 'HealthChecksUI:HealthChecks:9:Uri=http://weathersite:80/health'
+      # - 'HealthChecksUI:HealthChecks:0:Name=CitiesServiceApi'
+      # - 'HealthChecksUI:HealthChecks:0:Uri=http://host.docker.internal:5042/health'
     ports:
       - 5000:80
     extra_hosts:
