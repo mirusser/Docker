@@ -52,7 +52,7 @@ docker compose -p "dev-containers" up
 
 You may have to setup the external network manually:
 ```bash
-sudo docker network create -d bridge overlaynetwork
+sudo docker network create -d bridge sws-containers-bridge-network
 ```
 
 To list networks use:

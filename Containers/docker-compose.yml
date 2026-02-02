@@ -13,7 +13,6 @@ services:
       - /home/mirusser/docker/volumes/postgresql:/var/lib/postgresql
     networks:
       - default
-      - overlaynetwork
 
   mongo:
     image: mongo:latest
@@ -26,7 +25,6 @@ services:
     command: ["mongod", "--replSet", "rs0", "--bind_ip_all"] # Run Mongo as a single-node replica set
     networks:
       - default
-      - overlaynetwork
 
   elastic:
     image: elasticsearch:8.12.1
@@ -49,7 +47,6 @@ services:
       - /home/mirusser/docker/volumes/elasticsearch/data:/usr/share/elasticsearch/data
     networks:
       - default
-      - overlaynetwork
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -65,7 +62,6 @@ services:
       - /home/mirusser/docker/volumes/mssql/data:/var/opt/mssql
     networks:
       - default
-      - overlaynetwork
 
   redis:
     image: redis:latest
@@ -78,7 +74,6 @@ services:
     command: redis-server --appendonly yes
     networks:
       - default
-      - overlaynetwork
 
   seq:
     image: datalust/seq:latest
@@ -93,7 +88,6 @@ services:
       - /home/mirusser/docker/volumes/seq/data:/data
     networks:
       - default
-      - overlaynetwork
 
   rabbitmq:
     # image: rabbitmq:management # official version
@@ -107,7 +101,6 @@ services:
       - /home/mirusser/docker/volumes/rabbitmq/data:/var/lib/rabbitmq
     networks:
       - default
-      - overlaynetwork
 
   jenkins:
     image: jenkins/jenkins:latest
@@ -125,7 +118,6 @@ services:
       JAVA_OPTS: '-Djenkins.install.runSetupWizard=false'
     networks:
       - default
-      - overlaynetwork
 
   healthchecks:
     image: xabarilcoding/healthchecksui:latest
@@ -171,7 +163,6 @@ services:
     #  - /home/mirusser/docker/volumes/healthchecks/data/appsettings.json:/app/appsettings.json # the file needs to be created manually before starting container
     networks:
       - default
-      - overlaynetwork
   
   portainer:
     image: portainer/portainer-ce:latest
@@ -184,12 +175,10 @@ services:
       - /home/mirusser/docker/volumes/portainer/data:/data
     networks:
       - default
-      - overlaynetwork
 
 
 networks:
   default:
+    name: sws-containers-bridge-network
     driver: bridge
-  overlaynetwork:
-    name: overlaynetwork
     external: true
