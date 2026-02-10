@@ -43,6 +43,11 @@ Find docker0 IP:
 ip -4 addr show docker0
 ```
 
+Stop and remove all docker containers:
+```bash
+docker ps -aq | xargs -r docker rm -f
+```
+
 ## docker compose
 
 How to run -> in terminal, in directory where file: 'docker-compose.yml' is placed run this command:
