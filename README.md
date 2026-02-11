@@ -92,7 +92,7 @@ sudo rm -f /home/mirusser/docker/volumes/elasticsearch/data/node.lock`
 
 To delete all containers use:
 ```bash
-docker container prune -f`
+docker container prune -f
 ```
 
 Mongo, initialize the replica set (one-time):
